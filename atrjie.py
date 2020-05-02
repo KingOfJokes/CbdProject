@@ -49,8 +49,8 @@ collections = pd.concat([bbs,forum,news],axis=0, ignore_index=True,sort=False)
 #start_date = datetime(2016,1,1).date()
 #end_date = datetime(2018,12,31).date()
 filtered_list_apple_noENG = []
-start_date = datetime(2016,4,1)
-end_date = datetime(2016,6,30)
+start_date = datetime(2016,1,1)
+end_date = datetime(2018,12,31)
 
 def main(day,multi,length,ver):
     #day = 5
