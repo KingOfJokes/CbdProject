@@ -1,17 +1,22 @@
-import pickle
-import numpy as np
-from ckiptagger import WS, POS, NER
-import os
+import pandas as pd
+import re        #正規運算式
+import math
 import time
+import numpy as np 
+import csv
+from datetime import datetime, timedelta
+from datetime import date
+import pickle
+import jieba
+import os
+from ckiptagger import WS, POS, NER
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 pos = POS("./data")
 
-increase = dict(np.load('increaseword_all1y_3d0.5atr.pkl',allow_pickle = True))
-decrease = dict(np.load('decreaseword_all1y_3d0.5atr.pkl',allow_pickle = True))
-wordbank = dict(increase,**decrease)
-print(len(wordbank))
-xt = np.load('output_X_all1y_3d0.5atr.npy',allow_pickle = True)
-yt = np.load('output_Y_all1y_3d0.5atr.npy',allow_pickle = True)
+length = 300
+ver = 'all6m_5d2atr'
+xt = np.load('output_X_'+ver+'_'+str(length)+'.npy',allow_pickle = True)
+yt = np.load('output_Y_'+ver+'_'+str(length)+'.npy',allow_pickle = True)
 yt = np.array(yt)
 print(type(yt))
 print(yt.shape)
@@ -43,11 +48,7 @@ for j in range(len(inc_wordbag[0])):
 		#print(word,pos_char[word],wordbank[word])
 		for xt_ind in xt:
 			del xt_ind[word]
-			if word in wordbank:
-				del wordbank[word]
 			
-print(len(wordbank))
 print(len(xt[1]))
-print(wordbank)
 
-np.save('output_Xa_all1y_3d0.5atr.npy',xt)
+np.save('output_Xa_'+ver+'_'+str(length)+'.npy',xt)

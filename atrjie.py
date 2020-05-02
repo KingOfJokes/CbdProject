@@ -50,8 +50,11 @@ collections = pd.concat([bbs,forum,news],axis=0, ignore_index=True,sort=False)
 #end_date = datetime(2018,12,31).date()
 filtered_list_apple_noENG = []
 start_date = datetime(2016,1,1)
-end_date = datetime(2017,1,1)
-
+end_date = datetime(2016,7,1)
+day = 5
+multi = 2
+length = 300
+ver = 'all6m_5d2atr'
 for index,value in collections.iterrows():
     if (start_date <= value["post_time"].to_pydatetime()) and (end_date >=value["post_time"].to_pydatetime()):
         if ("蘋果" in (str(value["content"])+str(value["title"]))) or("蘋概股" in (str(value["content"])+str(value["title"]))):
@@ -86,8 +89,6 @@ increase_article_bef = []
 decrease_article_bef = []
 
 print('標價')
-day = 3
-multi = 0.5
 iday = 0
 dday = 0
 for i in range(10,Indexprice.shape[0] - day):
@@ -197,11 +198,13 @@ for key in decrease_keyword_dict.keys():
         decrease_keyword_dict[key].append((((decrease_keyword_dict[key][0] - ((decrease_keyword_dict[key][3]/num_all) * num_doc)) ** 2)/((decrease_keyword_dict[key][3]/num_all) * num_doc))* -1)
 decrease_keyword_dict = sorted(decrease_keyword_dict.items(),key = lambda x:x[1][4], reverse = True)  #照TF卡方排
 
-increase_keyword = increase_keyword_dict[0:250]
-decrease_keyword = decrease_keyword_dict[0:250]
+with open('increaseword_'+ver+'_wb.pkl', 'wb') as f: 
+    pickle.dump(increase_keyword_dict, f)
+with open('decreaseword_'+ver+'_wb.pkl', 'wb') as f: 
+    pickle.dump(decrease_keyword_dict, f)
 
-# In[ ]:
-
+increase_keyword = increase_keyword_dict[0:length]
+decrease_keyword = decrease_keyword_dict[0:length]
 #刪除重複關鍵字(兩邊都刪??)
 repeat_keyword_increase = []
 repeat_keyword_decrease = []
@@ -216,24 +219,18 @@ for i in range(len(repeat_keyword_increase)):
 for i in range(len(repeat_keyword_decrease)):    
     decrease_keyword.remove(repeat_keyword_decrease[i])
 
-
-
 # In[ ]:
-
+'''
 for i in increase_keyword:
     print(i)
 
 print("我是分隔線我是分隔線我是分隔線我是分隔線我是分隔線我是分隔線我是分隔線我是分隔線我是分隔線我是分隔線我是分隔線")
-# In[ ]:
 
 for d in decrease_keyword:
     print(d)
-
+'''
 print(len(increase_keyword))
 print(len(decrease_keyword))
-
-# In[ ]:
-
 
 output_X = []
 output_Y = []
@@ -268,11 +265,6 @@ output_y_numpy = np.array(output_Y)
 
 # In[ ]:
 
-np.save('./output_X_all1y_3d0.5atr.npy', output_x_numpy)
-np.save('./output_Y_all1y_3d0.5atr.npy', output_y_numpy)
-
-with open('increaseword_all1y_3d0.5atr.pkl', 'wb') as f: 
-    pickle.dump(increase_keyword, f)
-with open('decreaseword_all1y_3d0.5atr.pkl', 'wb') as f: 
-    pickle.dump(decrease_keyword, f)
+np.save('./output_X_'+ver+'_'+str(length)+'.npy', output_x_numpy)
+np.save('./output_Y_'+ver+'_'+str(length)+'.npy', output_y_numpy)
 
